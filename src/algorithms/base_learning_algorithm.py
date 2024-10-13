@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import os
 import dill
 
-from src.data import DATA_DIR
+from data import DATA_DIR
 
 
 class BaseLearningAlgorithm(ABC):
@@ -11,7 +11,7 @@ class BaseLearningAlgorithm(ABC):
         raise NotImplementedError("This method must be overridden")
 
     @abstractmethod
-    def run_policy_iteration(self):
+    def train(self, prediction_only:bool):
         raise NotImplementedError("This method must be overridden")
 
     def save_policy(self):
