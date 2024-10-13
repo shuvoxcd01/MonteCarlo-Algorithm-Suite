@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "monte-carlo-algorithm-suite"
+version = "0.0.1"
+description = "A collection of Monte Carlo prediction and control algorithms."
+authors = ["Falguni Das Shuvo"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+gymnasium = "0.29.1"
+matplotlib = "3.7.5"
+numpy = "1.24.4"
+tqdm = "^4.66.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
