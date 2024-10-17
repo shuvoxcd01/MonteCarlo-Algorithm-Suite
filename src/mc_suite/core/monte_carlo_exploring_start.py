@@ -16,6 +16,7 @@ class MonteCarloES(BaseLearningAlgorithm):
         self,
         env: Env,
         policy: Optional[BasePolicy] = None,
+        discount_factor: float = 0.9,
     ) -> None:
         super().__init__(name="MCES")
         self.env = env
@@ -27,7 +28,7 @@ class MonteCarloES(BaseLearningAlgorithm):
             else StochasticStartPolicy(num_actions=self.num_actions)
         )
         self.q_values = defaultdict(lambda: np.zeros(self.num_actions))
-        self.discount_factor = 0.9
+        self.discount_factor = discount_factor
 
     def get_policy(self):
         return self.policy

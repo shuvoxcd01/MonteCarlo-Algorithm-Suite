@@ -13,12 +13,15 @@ class MonteCarloEveryVisitPrediction(BaseLearningAlgorithm):
 
     """
 
-    def __init__(self, env: Env, policy: BasePolicy) -> None:
+    def __init__(
+        self, env: Env, policy: BasePolicy, discount_factor: float = 0.9
+    ) -> None:
         super().__init__(name="MCEveryVisitPrediction")
 
         self.env = env
         self.policy = policy
         self.V = defaultdict(float)
+        self.discount_factor = discount_factor
 
     def get_policy(self):
         return self.policy

@@ -17,6 +17,7 @@ class MonteCarloOffPolicy(BaseLearningAlgorithm):
         env: Env,
         target_policy: Optional[BasePolicy] = None,
         behavior_policy: Optional[BasePolicy] = None,
+        discount_factor: float = 0.9,
     ) -> None:
         super().__init__(name="MCPolicyControl(off-policy)")
         self.env = env
@@ -37,7 +38,7 @@ class MonteCarloOffPolicy(BaseLearningAlgorithm):
             else RandomPolicy(num_actions=self.num_actions)
         )
 
-        self.discount_factor = 0.9
+        self.discount_factor = discount_factor
 
     def get_policy(self):
         return self.target_policy
