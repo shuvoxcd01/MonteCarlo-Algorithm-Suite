@@ -11,14 +11,14 @@ from mc_suite.policies.base_policy import BasePolicy
 from mc_suite.policies.stochastic_start_policy import StochasticStartPolicy
 
 
-
-
 class MonteCarloES(BaseLearningAlgorithm):
     def __init__(
         self,
         env: Env,
         policy: Optional[BasePolicy] = None,
+        discount_factor: float = 0.9,
     ) -> None:
+        super().__init__(name="MCES")
         self.env = env
         self.num_actions = env.action_space.n
         self.actions = list(range(self.num_actions))
@@ -28,9 +28,7 @@ class MonteCarloES(BaseLearningAlgorithm):
             else StochasticStartPolicy(num_actions=self.num_actions)
         )
         self.q_values = defaultdict(lambda: np.zeros(self.num_actions))
-        self.discount_factor = 0.9
-
-        self.policy_name = "MCES"
+        self.discount_factor = discount_factor
 
     def get_policy(self):
         return self.policy
@@ -72,3 +70,11 @@ class MonteCarloES(BaseLearningAlgorithm):
                         )
 
         self.policy.q_values = self.q_values
+
+    def get_state_values(self):
+        raise Exception(
+            f"{self.name} computes only state-action values. Use get_state_action_values() to get state-action values."
+        )
+
+    def get_state_action_values(self):
+        return self.q_values
