@@ -9,7 +9,7 @@ import numpy as np
 
 class MonteCarloEveryVisitPrediction(BaseLearningAlgorithm):
     """
-    MonteCarloEveryVisit (also known as constant-alpha MC)has been implemented as a prediction only algorithm.
+    MonteCarloEveryVisitPrediction is as a prediction only algorithm.
 
     """
 
