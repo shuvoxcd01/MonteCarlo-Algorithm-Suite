@@ -4,11 +4,13 @@ from gymnasium import Env
 import numpy as np
 from tqdm import tqdm
 
-from policies.base_policy import BasePolicy
-from policies.random_policy import RandomPolicy
-from policies.stochastic_start_policy import StochasticStartPolicy
-from src.algorithms.base_learning_algorithm import BaseLearningAlgorithm
-from src.algorithms.trajectory import Trajectory
+from mc_suite.core.base_learning_algorithm import BaseLearningAlgorithm
+from mc_suite.core.trajectory import Trajectory
+from mc_suite.policies.base_policy import BasePolicy
+from mc_suite.policies.random_policy import RandomPolicy
+from mc_suite.policies.stochastic_start_policy import StochasticStartPolicy
+
+
 
 
 class MonteCarloOffPolicy(BaseLearningAlgorithm):

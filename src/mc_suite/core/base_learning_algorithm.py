@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 import os
 import dill
 
-from data import DATA_DIR
 
 
 class BaseLearningAlgorithm(ABC):
@@ -14,11 +13,11 @@ class BaseLearningAlgorithm(ABC):
     def train(self, prediction_only:bool):
         raise NotImplementedError("This method must be overridden")
 
-    def save_policy(self):
+    def save_policy(self, path:str):
         policy = self.get_policy()
         policy_name = self.policy_name if self.policy_name else ""
 
-        saved_policy_path = os.path.join(DATA_DIR, policy_name + "_saved_policy.pkl")
+        saved_policy_path = os.path.join(path, policy_name + "_saved_policy.pkl")
 
         serialized_policy = dill.dumps(policy)
 
