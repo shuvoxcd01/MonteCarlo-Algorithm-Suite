@@ -12,7 +12,7 @@ class BaseLearningAlgorithm(ABC):
         raise NotImplementedError("This method must be overridden")
     
     @abstractmethod
-    def get_state_action_values(self)
+    def get_state_action_values(self):
         raise NotImplementedError("This method must be overridden")
 
     @abstractmethod
