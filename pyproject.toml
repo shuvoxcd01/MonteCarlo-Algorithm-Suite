@@ -3,9 +3,9 @@ requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "Monte-Carlo Algorithm Suite"
+name = "mc_suite"
 version = "0.0.2"
-dependencies = ["gymnasium==0.29.1", "matplotlib==3.7.5", numpy=="1.24.4",tqdm=">=4.66.5"]
+dependencies = ["gymnasium==0.29.1", "matplotlib==3.7.5", "numpy==1.24.4","tqdm>=4.66.5"]
 requires-python = ">= 3.8"
 authors=[{name="Falguni Das Shuvo"}]
 readme = "README.md"
