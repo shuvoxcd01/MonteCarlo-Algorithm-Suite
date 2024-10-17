@@ -1,8 +1,8 @@
 import os
 import gymnasium as gym
 
-from src.algorithms.base_learning_algorithm import BaseLearningAlgorithm
 from data import DATA_DIR
+from mc_suite.core.base_learning_algorithm import BaseLearningAlgorithm
 
 # SAVED_POLICY_PATH = os.path.join(DATA_DIR, "MCES_saved_policy.pkl")#MCPolicyControl(off-policy)_saved_policy
 SAVED_POLICY_PATH = os.path.join(DATA_DIR, "MCPolicyControl(off-policy)_saved_policy.pkl")#MCPolicyControl(off-policy)_saved_policy
