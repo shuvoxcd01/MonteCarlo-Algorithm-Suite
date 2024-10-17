@@ -11,8 +11,6 @@ from mc_suite.policies.random_policy import RandomPolicy
 from mc_suite.policies.stochastic_start_policy import StochasticStartPolicy
 
 
-
-
 class MonteCarloOffPolicy(BaseLearningAlgorithm):
     def __init__(
         self,
@@ -20,6 +18,7 @@ class MonteCarloOffPolicy(BaseLearningAlgorithm):
         target_policy: Optional[BasePolicy] = None,
         behavior_policy: Optional[BasePolicy] = None,
     ) -> None:
+        super().__init__(name="MCPolicyControl(off-policy)")
         self.env = env
         self.num_actions = self.env.action_space.n
         self.actions = list(range(self.num_actions))
@@ -39,7 +38,6 @@ class MonteCarloOffPolicy(BaseLearningAlgorithm):
         )
 
         self.discount_factor = 0.9
-        self.policy_name = "MCPolicyControl(off-policy)"
 
     def get_policy(self):
         return self.target_policy
@@ -93,3 +91,11 @@ class MonteCarloOffPolicy(BaseLearningAlgorithm):
                     break
 
         self.target_policy.q_values = self.q_values
+
+    def get_state_values(self):
+        raise Exception(
+            f"{self.name} computes only state-action values. Use get_state_action_values() to get state-action values."
+        )
+
+    def get_state_action_values(self):
+        return self.q_values
