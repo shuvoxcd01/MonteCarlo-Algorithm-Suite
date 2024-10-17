@@ -3,21 +3,36 @@ import os
 import dill
 
 
-
 class BaseLearningAlgorithm(ABC):
+    def __init__(self, name:str) -> None:
+        self.name = name
+
+    @abstractmethod
+    def get_state_values(self):
+        raise NotImplementedError("This method must be overridden")
+    
+    @abstractmethod
+    def get_state_action_values(self)
+        raise NotImplementedError("This method must be overridden")
+
     @abstractmethod
     def get_policy(self):
         raise NotImplementedError("This method must be overridden")
 
     @abstractmethod
-    def train(self, prediction_only:bool):
+    def train(self, num_episodes: int, prediction_only: bool):
         raise NotImplementedError("This method must be overridden")
 
-    def save_policy(self, path:str):
-        policy = self.get_policy()
-        policy_name = self.policy_name if self.policy_name else ""
+    def evaluate_policy(self, num_episodes: int):
+        return self.train(num_episodes, prediction_only=True)
 
-        saved_policy_path = os.path.join(path, policy_name + "_saved_policy.pkl")
+    def optimize_policy(self, num_episodes: int):
+        return self.train(num_episodes, prediction_only=False)
+
+    def save_policy(self, path: str):
+        policy = self.get_policy()
+
+        saved_policy_path = os.path.join(path, self.name + "_saved_policy.pkl")
 
         serialized_policy = dill.dumps(policy)
 
