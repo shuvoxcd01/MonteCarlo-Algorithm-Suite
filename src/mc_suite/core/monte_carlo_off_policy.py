@@ -5,7 +5,8 @@ import numpy as np
 from tqdm import tqdm
 
 from mc_suite.core.base_learning_algorithm import BaseLearningAlgorithm
-from mc_suite.core.trajectory import Trajectory
+from mc_suite.core.util.episode_collector import collect_episode
+from mc_suite.core.util.trajectory import Trajectory
 from mc_suite.policies.base_policy import BasePolicy
 from mc_suite.policies.random_policy import RandomPolicy
 from mc_suite.policies.soft.stochastic_start_epsilon_greedy_policy import (
@@ -63,16 +64,9 @@ class MonteCarloOffPolicy(BaseLearningAlgorithm):
         trajectory = Trajectory()
 
         for _ in tqdm(range(num_episodes)):
-            trajectory.clear()
-            obs, info = self.env.reset()
-            done = False
-
-            while not done:
-                action = self.behavior_policy.get_action(state=obs)
-                next_obs, reward, terminated, truncated, info = self.env.step(action)
-                trajectory.record_step(state=obs, action=action, reward=reward)
-                done = terminated or truncated
-                obs = next_obs
+            collect_episode(
+                env=self.env, policy=self.behavior_policy, trajectory=trajectory
+            )
 
             discounted_return = 0.0
             W = 1
