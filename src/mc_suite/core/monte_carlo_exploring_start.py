@@ -8,7 +8,7 @@ import random
 from mc_suite.core.base_learning_algorithm import BaseLearningAlgorithm
 from mc_suite.core.trajectory import Trajectory
 from mc_suite.policies.base_policy import BasePolicy
-from mc_suite.policies.stochastic_start_policy import StochasticStartPolicy
+from mc_suite.policies.greedy.stochastic_start_greedy_policy import StochasticStartGreedyPolicy
 
 
 class MonteCarloES(BaseLearningAlgorithm):
@@ -25,7 +25,7 @@ class MonteCarloES(BaseLearningAlgorithm):
         self.policy = (
             policy
             if policy is not None
-            else StochasticStartPolicy(num_actions=self.num_actions)
+            else StochasticStartGreedyPolicy(num_actions=self.num_actions)
         )
         self.q_values = defaultdict(lambda: np.zeros(self.num_actions))
         self.discount_factor = discount_factor
