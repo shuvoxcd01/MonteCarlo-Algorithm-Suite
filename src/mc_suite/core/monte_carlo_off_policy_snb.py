@@ -9,26 +9,12 @@ from mc_suite.core.util.episode_collector import collect_episode
 from mc_suite.core.util.trajectory import Trajectory
 from mc_suite.policies.base_policy import BasePolicy
 from mc_suite.policies.random_policy import RandomPolicy
-from mc_suite.policies.soft.stochastic_start_epsilon_greedy_policy import (
-    StochasticStartEpsilonGreedyPolicy,
+from mc_suite.policies.greedy.stochastic_start_greedy_policy import (
+    StochasticStartGreedyPolicy,
 )
 
 
-class MonteCarloOffPolicy(BaseLearningAlgorithm):
-    """
-    Monte Carlo Off-policy Control
-
-    This implementation differs from Sutton and Barto's approach
-    as outlined in Reinforcement Learning: An Introduction (Second Edition, Chapter 5).
-    The Off-policy Monte Carlo control algorithm in the book focuses on a greedy policy,
-    resulting in a binary action probability for the target (greedy) policy (either 1 or 0).
-    This can negatively impact exploration.
-
-    In contrast, this implementation accommodates the use of soft policies,
-    allowing the action probabilities of the target policy to be non-binary.
-    This facilitates more effective exploration.
-    """
-
+class MonteCarloOffPolicySnB(BaseLearningAlgorithm):
     def __init__(
         self,
         env: Env,
@@ -36,7 +22,7 @@ class MonteCarloOffPolicy(BaseLearningAlgorithm):
         behavior_policy: Optional[BasePolicy] = None,
         discount_factor: float = 0.9,
     ) -> None:
-        super().__init__(name="MCPolicyControl(off-policy)")
+        super().__init__(name="MCPolicyControl(off-policy-SnB)")
         self.env = env
         self.num_actions = self.env.action_space.n
         self.actions = list(range(self.num_actions))
@@ -47,7 +33,7 @@ class MonteCarloOffPolicy(BaseLearningAlgorithm):
         self.target_policy = (
             target_policy
             if target_policy is not None
-            else StochasticStartEpsilonGreedyPolicy(num_actions=self.num_actions)
+            else StochasticStartGreedyPolicy(num_actions=self.num_actions)
         )
         self.behavior_policy = (
             behavior_policy
@@ -83,6 +69,9 @@ class MonteCarloOffPolicy(BaseLearningAlgorithm):
                     greedy_action = np.argmax(self.q_values[state])
                     self.target_policy.update(state=state, action=greedy_action)
 
+                    if greedy_action != action:
+                        break
+
                 target_policy_action_prob = self.target_policy.get_action_probs(
                     state=state, action=action
                 )
@@ -90,9 +79,12 @@ class MonteCarloOffPolicy(BaseLearningAlgorithm):
                     state=state, action=action
                 )
 
+                if not prediction_only:
+                    assert target_policy_action_prob == 1.0
+
                 W = W * (target_policy_action_prob / behavior_policy_action_prob)
 
-                if W == 0:
+                if prediction_only and W == 0:
                     break
 
         self.target_policy.q_values = self.q_values

@@ -6,7 +6,7 @@ from gymnasium.spaces.space import Space
 from mc_suite.policies.base_policy import BasePolicy
 
 
-class StochasticStartPolicy(BasePolicy):
+class StochasticStartGreedyPolicy(BasePolicy):
     def __init__(self, num_actions: int, action_space: Optional[Space] = None) -> None:
         super().__init__()
         self.action_space = action_space

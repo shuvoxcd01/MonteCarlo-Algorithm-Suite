@@ -1,26 +1,31 @@
 from collections import defaultdict
 from mc_suite.core.base_learning_algorithm import BaseLearningAlgorithm
-from mc_suite.core.trajectory import Trajectory
+from mc_suite.core.util.episode_collector import collect_episode
+from mc_suite.core.util.trajectory import Trajectory
 from mc_suite.policies.base_policy import BasePolicy
 from gymnasium import Env
 from tqdm import tqdm
-import numpy as np
 
 
-class MonteCarloEveryVisitPrediction(BaseLearningAlgorithm):
+class MonteCarloEveryVisitPredictionIncremental(BaseLearningAlgorithm):
     """
-    MonteCarloEveryVisitPrediction is as a prediction only algorithm.
+    MonteCarloEveryVisitPredictionIncremental (also known as constant-alpha MC every visit) is as a prediction only algorithm.
 
     """
 
     def __init__(
-        self, env: Env, policy: BasePolicy, discount_factor: float = 0.9
+        self,
+        env: Env,
+        policy: BasePolicy,
+        step_size: float = 0.1,
+        discount_factor: float = 0.9,
     ) -> None:
         super().__init__(name="MCEveryVisitPrediction")
 
         self.env = env
         self.policy = policy
         self.V = defaultdict(float)
+        self.step_size = step_size
         self.discount_factor = discount_factor
 
     def get_policy(self):
@@ -29,20 +34,12 @@ class MonteCarloEveryVisitPrediction(BaseLearningAlgorithm):
     def train(self, num_episodes: int, prediction_only: bool):
         if prediction_only == False:
             raise Exception("This is a prediction/evaluation only implementation.")
+
         trajectory = Trajectory()
-        returns = defaultdict(list)
+        returns = defaultdict(float)
 
         for i in tqdm(range(num_episodes)):
-            trajectory.clear()
-            obs, info = self.env.reset()
-            done = False
-
-            while not done:
-                action = self.policy.get_action(state=obs)
-                next_obs, reward, terminated, truncated, info = self.env.step(action)
-                trajectory.record_step(state=obs, action=action, reward=reward)
-                done = terminated or truncated
-                obs = next_obs
+            collect_episode(env=self.env, policy=self.policy, trajectory=trajectory)
 
             discounted_return = 0.0
 
@@ -50,8 +47,10 @@ class MonteCarloEveryVisitPrediction(BaseLearningAlgorithm):
                 state, action, reward = trajectory.get_step(timestep)
                 discounted_return = self.discount_factor * discounted_return + reward
 
-                returns[state].append(discounted_return)
-                self.V[state] = np.mean(returns[state])
+                returns[state] = discounted_return
+                self.V[state] = self.V[state] + self.step_size * (
+                    returns[state] - self.V[state]
+                )
 
     def get_state_values(self):
         return self.V
