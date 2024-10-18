@@ -6,7 +6,7 @@ from tqdm import tqdm
 import random
 
 from mc_suite.core.base_learning_algorithm import BaseLearningAlgorithm
-from mc_suite.core.trajectory import Trajectory
+from mc_suite.core.util.trajectory import Trajectory
 from mc_suite.policies.base_policy import BasePolicy
 from mc_suite.policies.greedy.stochastic_start_greedy_policy import StochasticStartGreedyPolicy
 
