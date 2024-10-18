@@ -1,9 +1,9 @@
 from __future__ import annotations
 import matplotlib.pyplot as plt
 import gymnasium as gym
-from core.monte_carlo_exploring_start import MonteCarloES
-from core.monte_carlo_off_policy import MonteCarloOffPolicy
-from mc_suite.util import create_grids, create_plots
+
+from mc_suite.core.monte_carlo_off_policy import MonteCarloOffPolicy
+from mc_suite.figure_creator import create_grids, create_plots
 
 n_episodes = 10000
 env = gym.make("Blackjack-v1", sab=True)
